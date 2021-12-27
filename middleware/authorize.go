@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/golang-jwt/jwt"
+	"github.com/gorilla/context"
 )
 
 func NewAuthorize() Authorize {
@@ -34,7 +35,7 @@ func (auth Authorize) Authentication(next http.Handler) http.Handler {
 			return
 		}
 
-		// context.Set(r, "user", claims)
+		context.Set(r, "user", credential)
 		// fmt.Printf("%+v", claims)
 		next.ServeHTTP(w, r)
 	})

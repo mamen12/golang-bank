@@ -1,0 +1,22 @@
+[
+   {
+      "id": "aa1",
+      "customerId": "abcd1231",
+      "balance": 1000000
+   },
+   {
+      "id": "aa2",
+      "customerId": "abcd123",
+      "balance": 2000000
+   },
+   {
+      "id": "aa3",
+      "customerId": "abd1100",
+      "balance": 3000000
+   },
+   {
+      "id": "aa4s",
+      "customerId": "abe110",
+      "balance": 3000000
+   }
+]

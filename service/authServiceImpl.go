@@ -49,3 +49,6 @@ func (service *AuthServiceImpl) Login(username, password string) (string, error)
 	return token, nil
 
 }
+func (service *AuthServiceImpl) Logout(token string) error {
+	return service.AuthRepo.Logout(token)
+}

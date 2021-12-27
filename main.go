@@ -23,6 +23,7 @@ func main() {
 	authorize := middleware.NewAuthorize()
 	auth.Use(authorize.Authentication)
 
+	//
 	customerRepo := repo.NewCustomerRepo()
 	customerService := service.NewCustomerService(&customerRepo)
 	customerController := controller.NewCustomerController(&customerService)
@@ -30,10 +31,29 @@ func main() {
 	// var customerController controller.CustomerController
 	// customerController.Route(router)
 
+	//
 	authRepo := repo.NewAuthRepo()
 	authService := service.NewAuthService(&authRepo)
 	authController := controller.NewAuthController(&authService)
-	authController.Route(router)
+	authController.Route(router, auth)
+
+	//
+	transactionRepo := repo.NewTransactionRepo()
+	transactionService := service.NewTransactionService(&transactionRepo)
+	transactionController := controller.NewTransactionController(&transactionService)
+	transactionController.Route(router, auth)
+
+	//
+	merchantRepo := repo.NewMerchantRepo()
+	merchantService := service.NewMerchantService(&merchantRepo)
+	merchantController := controller.NewMerchantController(&merchantService)
+	merchantController.Route(router, auth)
+
+	//
+	accountRepo := repo.NewAccountRepo()
+	accountService := service.NewAccountService(&accountRepo)
+	accountController := controller.NewAccountController(&accountService)
+	accountController.Route(router, auth)
 
 	fmt.Println("Server running at :8083")
 	log.Fatal(http.ListenAndServe(":8083", handlers.CORS(origins, headers, methods)(router)))

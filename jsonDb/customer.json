@@ -9,6 +9,18 @@
       "id": "abd1100",
       "name": "Fidiya tri",
       "username": "fidi06",
-      "password": "060117iya"  
+      "password": "060117diya"  
+   },
+   {
+      "id": "abcd1231",
+      "name": "Test",
+      "username": "testing",
+      "password": "passwordsalah"  
+   },
+   {
+      "id": "abe110",
+      "name": "Bagas",
+      "username": "bagasworo",
+      "password": "passwordinccorect"  
    }
 ]
