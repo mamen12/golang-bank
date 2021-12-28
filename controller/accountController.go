@@ -3,6 +3,7 @@ package controller
 import (
 	"bank/service"
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -46,6 +47,12 @@ func (controller *AccountController) GetAccountId(w http.ResponseWriter, r *http
 		id = value
 	}
 	accounts := controller.AccountService.GetAccountId(id)
+
+	if accounts.GetId() == "" {
+		errMessage := errors.New("access ilegal, data tidak ditemukan")
+		http.Error(w, errMessage.Error(), http.StatusNotFound)
+		return
+	}
 
 	message, err := json.Marshal(&accounts)
 

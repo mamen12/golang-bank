@@ -5,22 +5,22 @@ import (
 	"bank/repo"
 )
 
-func NewAccountService(merchantRepo *repo.AccountRepo) AccountService {
+func NewAccountService(Account *repo.AccountRepo) AccountService {
 	return &AccountServiceImpl{
-		merchantRepo: *merchantRepo,
+		Account: *Account,
 	}
 }
 
 type AccountServiceImpl struct {
-	merchantRepo repo.AccountRepo
+	Account repo.AccountRepo
 }
 
 func (service *AccountServiceImpl) GetAll() []entity.Account {
-	merchants := service.merchantRepo.GetAll()
+	merchants := service.Account.GetAll()
 	return merchants
 }
 
 func (service *AccountServiceImpl) GetAccountId(id string) entity.Account {
-	merchant, _ := service.merchantRepo.GetAccountId(id)
+	merchant, _ := service.Account.GetAccountId(id)
 	return merchant
 }

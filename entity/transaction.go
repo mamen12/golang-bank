@@ -4,23 +4,39 @@ import "encoding/json"
 
 type Transaction struct {
 	id         string
-	customerId string
+	accountId  string
 	merchantId string
 	amount     int
 }
 
-func (t *Transaction) SetCustomerId(customerId string) {
-	t.customerId = customerId
+func (tx *Transaction) GetId() string {
+	return tx.id
 }
 
-func (t *Transaction) SetId(id string) {
-	t.id = id
+func (tx *Transaction) GetAccountId() string {
+	return tx.accountId
 }
 
-func (t *Transaction) UnmarshalJSON(data []byte) error {
+func (tx *Transaction) GetMerchantId() string {
+	return tx.merchantId
+}
+
+func (tx *Transaction) GetAmount() int {
+	return tx.amount
+}
+
+func (tx *Transaction) SetAccountId(accountId string) {
+	tx.accountId = accountId
+}
+
+func (tx *Transaction) SetId(id string) {
+	tx.id = id
+}
+
+func (tx *Transaction) UnmarshalJSON(data []byte) error {
 	alias := struct {
 		Id         string `json:"id"`
-		CustomerId string `json:"customer_id"`
+		AccountId  string `json:"account_id"`
 		MerchantId string `json:"merchant_id"`
 		Amount     int    `json:"amount"`
 	}{}
@@ -30,24 +46,24 @@ func (t *Transaction) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	t.id = alias.Id
-	t.customerId = alias.CustomerId
-	t.merchantId = alias.MerchantId
-	t.amount = alias.Amount
+	tx.id = alias.Id
+	tx.accountId = alias.AccountId
+	tx.merchantId = alias.MerchantId
+	tx.amount = alias.Amount
 
 	return nil
 }
 
-func (t *Transaction) MarshalJSON() ([]byte, error) {
+func (tx *Transaction) MarshalJSON() ([]byte, error) {
 	return json.Marshal(struct {
 		Id         string `json:"id"`
-		CustomerId string `json:"customer_id"`
+		AccountId  string `json:"account_id"`
 		MerchantId string `json:"merchant_id"`
 		Amount     int    `json:"amount"`
 	}{
-		Id:         t.id,
-		CustomerId: t.customerId,
-		MerchantId: t.merchantId,
-		Amount:     t.amount,
+		Id:         tx.id,
+		AccountId:  tx.accountId,
+		MerchantId: tx.merchantId,
+		Amount:     tx.amount,
 	})
 }

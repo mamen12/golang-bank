@@ -3,6 +3,7 @@ package controller
 import (
 	"bank/service"
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -46,7 +47,11 @@ func (controller *MerchantController) GetMerchantId(w http.ResponseWriter, r *ht
 		id = value
 	}
 	merchants := controller.MerchantService.GetMerchantId(id)
-
+	if merchants.GetId() == "" {
+		errMessage := errors.New("access ilegal, data tidak ditemukan")
+		http.Error(w, errMessage.Error(), http.StatusNotFound)
+		return
+	}
 	message, err := json.Marshal(&merchants)
 
 	if err != nil {

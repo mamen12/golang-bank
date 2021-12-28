@@ -1,13 +1,11 @@
 package controller
 
 import (
-	"bank/dto"
 	"bank/entity"
 	"bank/service"
 	"encoding/json"
 	"net/http"
 
-	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 )
 
@@ -20,7 +18,8 @@ type TransactionController struct {
 }
 
 func (controller *TransactionController) Route(router, auth *mux.Router) {
-	auth.HandleFunc("/transaction", controller.Create).Methods("POST")
+	// auth.HandleFunc("/transaction", controller.Create).Methods("POST")
+	auth.HandleFunc("/transaction/{id}", controller.Create).Methods("POST")
 }
 
 func (controller *TransactionController) Create(w http.ResponseWriter, r *http.Request) {
@@ -30,9 +29,14 @@ func (controller *TransactionController) Create(w http.ResponseWriter, r *http.R
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	params := mux.Vars(r)
+	var id string
+	for _, value := range params {
+		id = value
+	}
+	// user := context.Get(r, "user").(*dto.UserCredential)
 
-	user := context.Get(r, "user").(*dto.UserCredential)
-	transaction.SetCustomerId(user.Id)
+	transaction.SetAccountId(id)
 
 	err := controller.TransactionService.Create(transaction)
 	if err != nil {

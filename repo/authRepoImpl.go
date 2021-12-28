@@ -74,5 +74,5 @@ func (repo *AuthRepoImpl) Logout(token string) error {
 		}
 	}
 
-	return errors.New("token gk ada")
+	return errors.New("token tidak ada")
 }

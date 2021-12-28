@@ -3,31 +3,31 @@ package entity
 import "encoding/json"
 
 type Account struct {
-	id         string
-	customerId string
-	balance    int
+	id        string
+	accountId string
+	bill      int
 }
 
 func (acc *Account) GetId() string {
 	return acc.id
 }
 
-func (acc *Account) GetName() string {
-	return acc.customerId
+func (acc *Account) GetAccountId() string {
+	return acc.accountId
 }
 
-func (acc *Account) GetBallance() int {
-	return acc.balance
+func (acc *Account) GetBill() int {
+	return acc.bill
 }
-func (acc *Account) SetBalance(balance int) {
-	acc.balance = balance
+func (acc *Account) SetBill(bill int) {
+	acc.bill = bill
 }
 
 func (acc *Account) UnmarshalJSON(data []byte) error {
 	alias := struct {
-		Id         string `json:"id"`
-		CustomerId string `json:"customerId"`
-		Balance    int    `json:"balance"`
+		Id        string `json:"id"`
+		AccountId string `json:"accountId"`
+		Bill      int    `json:"bill"`
 	}{}
 
 	err := json.Unmarshal(data, &alias)
@@ -36,20 +36,20 @@ func (acc *Account) UnmarshalJSON(data []byte) error {
 	}
 
 	acc.id = alias.Id
-	acc.customerId = alias.CustomerId
-	acc.balance = alias.Balance
+	acc.accountId = alias.AccountId
+	acc.bill = alias.Bill
 
 	return nil
 }
 
 func (acc *Account) MarshalJSON() ([]byte, error) {
 	return json.Marshal(struct {
-		Id         string `json:"id"`
-		CustomerId string `json:"customerId"`
-		Balance    int    `json:"balance"`
+		Id        string `json:"id"`
+		AccountId string `json:"accountId"`
+		Bill      int    `json:"bill"`
 	}{
-		Id:         acc.id,
-		CustomerId: acc.customerId,
-		Balance:    acc.balance,
+		Id:        acc.id,
+		AccountId: acc.accountId,
+		Bill:      acc.bill,
 	})
 }
