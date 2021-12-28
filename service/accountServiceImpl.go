@@ -16,11 +16,11 @@ type AccountServiceImpl struct {
 }
 
 func (service *AccountServiceImpl) GetAll() []entity.Account {
-	merchants := service.Account.GetAll()
-	return merchants
+	accounts := service.Account.GetAll()
+	return accounts
 }
 
 func (service *AccountServiceImpl) GetAccountId(id string) entity.Account {
-	merchant, _ := service.Account.GetAccountId(id)
-	return merchant
+	account, _ := service.Account.GetAccountId(id)
+	return account
 }

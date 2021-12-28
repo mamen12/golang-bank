@@ -10,13 +10,18 @@ import (
 )
 
 func NewAuthService(authRepo *repo.AuthRepo) AuthService {
+	historyRepo := repo.NewHistoryRepo()
+	historyService := NewHistoryService(&historyRepo)
+
 	return &AuthServiceImpl{
-		AuthRepo: *authRepo,
+		HistoryService: historyService,
+		AuthRepo:       *authRepo,
 	}
 }
 
 type AuthServiceImpl struct {
-	AuthRepo repo.AuthRepo
+	HistoryService HistoryService
+	AuthRepo       repo.AuthRepo
 }
 
 func (service *AuthServiceImpl) GenerateToken(customer entity.Customer) string {
@@ -45,10 +50,25 @@ func (service *AuthServiceImpl) Login(username, password string) (string, error)
 	if err != nil {
 		return "", err
 	}
+	//save To History
+	var history entity.History
+	currentTime := time.Now()
+	history.SetId("login-" + username)
+	history.SetWhen(currentTime.Format("2006-01-02 15:04:05"))
+	history.SetName("Login")
+	service.HistoryService.Create(history)
 
 	return token, nil
 
 }
 func (service *AuthServiceImpl) Logout(token string) error {
+	//save To history
+	var history entity.History
+	currentTime := time.Now()
+	history.SetId("Logout" + token)
+	history.SetWhen(currentTime.Format("2006-01-02 15:04:05"))
+	history.SetName("Logout Customer")
+	service.HistoryService.Create(history)
+
 	return service.AuthRepo.Logout(token)
 }

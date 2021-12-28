@@ -5,8 +5,8 @@ import (
 	"bank/repo"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
+	"time"
 )
 
 func NewTransactionService(transactionRepo *repo.TransactionRepo) TransactionService {
@@ -16,15 +16,20 @@ func NewTransactionService(transactionRepo *repo.TransactionRepo) TransactionSer
 	merchantRepo := repo.NewMerchantRepo()
 	merchantService := NewMerchantService(&merchantRepo)
 
+	historyRepo := repo.NewHistoryRepo()
+	historyService := NewHistoryService(&historyRepo)
+
 	return &TransactionServiceImpl{
 		AccountService:  accountService,
 		MerchantService: merchantService,
+		HistoryService:  historyService,
 		TransactionRepo: *transactionRepo,
 	}
 }
 
 type TransactionServiceImpl struct {
 	AccountService  AccountService
+	HistoryService  HistoryService
 	MerchantService MerchantService
 	TransactionRepo repo.TransactionRepo
 }
@@ -48,19 +53,26 @@ func (service *TransactionServiceImpl) Create(transaction entity.Transaction) er
 	// payment merchant
 	bill := account.GetBill() - transaction.GetAmount()
 	err := service.TransactionRepo.Create(transaction)
-	fmt.Println(err)
-	fmt.Println(bill)
+
 	if account.GetId() == "" {
-		err := errors.New("access ilegal, data tidak ditemukan")
+		err := errors.New("access ilegal, data not found")
 		return err
 
 	} else if merchant.GetId() == "" {
-		err := errors.New("access ilegal, data tidak ditemukan")
+		err := errors.New("access ilegal, data not found")
 		return err
 
 	} else {
 		transaction.SetId("transA")
 		account.SetBill(bill)
+
+		//save To history
+		var history entity.History
+		currentTime := time.Now()
+		history.SetId("payment merchant - " + id_account)
+		history.SetWhen(currentTime.Format("2006-01-02 15:04:05"))
+		history.SetName("Payment merchant by id account")
+		service.HistoryService.Create(history)
 
 		//get list account
 		var accounts []entity.Account
@@ -73,12 +85,8 @@ func (service *TransactionServiceImpl) Create(transaction entity.Transaction) er
 		for idx, val := range accounts {
 			if val.GetId() == id_account {
 				accounts = append(accounts[:idx], accounts[idx+1:]...)
-				fmt.Println(accounts)
 				accounts = append(accounts, account)
-				fmt.Println(accounts)
 				tokensByte, _ := json.Marshal(accounts)
-				s := string(tokensByte)
-				fmt.Println(s)
 				err = ioutil.WriteFile("./jsonDb/account.json", tokensByte, 0644)
 				return err
 			}
